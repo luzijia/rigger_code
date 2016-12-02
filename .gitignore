@@ -1,2 +1,6 @@
 *.pyc
 *.swp
+build/
+dist/
+files.txt
+rigger_code.egg-info/

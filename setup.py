@@ -16,11 +16,11 @@ def read(fname):
 
 NAME = "rigger_code"
 
-PACKAGES = ["rigger_code","rigger_code.pymysql.constants","rigger_code.pymysql"]
+PACKAGES = ["rigger_code","rigger_code.pymysql.constants","rigger_code.pymysql","jinja2","markupsafe"]
 
 DESCRIPTION = "this is a rigger for speeding up code."
 
-LONG_DESCRIPTION = read("README.txt")
+LONG_DESCRIPTION = read("README.md")
 
 KEYWORDS = "test python package"
 
@@ -30,7 +30,7 @@ AUTHOR_EMAIL = "luzijia@email.com"
 
 URL = "http://luzijia.net"
 
-VERSION = "0.1"
+VERSION = "0.3"
 
 LICENSE = "MIT"
 
@@ -52,6 +52,6 @@ setup(
     license = LICENSE,
     packages = PACKAGES,
     include_package_data=True,
-    zip_safe=True,
+    zip_safe=True
 )
 
