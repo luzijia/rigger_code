@@ -22,10 +22,10 @@ class {{tablename}} extends Table
         return $this->Execute($sql, array(${{ pk }}));
     }
 
-    public function update(${{ pk }},{{ fields_cond|join(',') }})
+    public function update(${{ pk }},{{ fields_cond }})
     {
-        $sql = "update {$this->getTableName()} set {{ fields_bind|join(', ') }}  where {{pk}}=?";
-        $sql = "update {$this->getTableName()} set {{ fields_cond_val|join(', ') }}  where {{pk}}=?";
-        return $this->Execute($sql, array({{ fields_cond|join(',') }} ,${{pk}}));
+        $sql = "update {$this->getTableName()} set {{ fields_bind }}  where {{pk}}=?";
+        $sql = "update {$this->getTableName()} set {{ fields_cond_val }}  where {{pk}}=?";
+        return $this->Execute($sql, array({{ fields_cond }} ,${{pk}}));
     }
 }

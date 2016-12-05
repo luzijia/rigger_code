@@ -77,7 +77,8 @@ class core:
         tpl_content = codecs.open(tpl).read()
 
         template    = Template(tpl_content)
-        tpl_content=template.render(tablename=tablename,pk=pk,fields_cond=fields_cond,fields_bind=fields_bind,fields_cond_val=fields_cond_val)
+        tpl_content=template.render(tablename=tablename,pk=pk,fields_cond=",".join(fields_cond),
+                fields_bind=",".join(fields_bind),fields_cond_val=",".join(fields_cond_val))
 
         core.writeTplContent(tpl_content,tablename,output_dir)
 
