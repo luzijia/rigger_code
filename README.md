@@ -40,11 +40,14 @@ RIGGER CODE 轻量级代码脚手架 程序员开发代码的加速器
     这里还可以生成更多的模式
 
     ```
-### 安装,需要sudo权限
+### 安装
 ```
 $ git clone https://github.com/luzijia/rigger_code
 $ chmod u+x setup.sh
 $ ./setup.sh
+
+安装需要pyinstaller来生成可执行文件 参考:http://www.pyinstaller.org/
+或者 python rgc.py 执行
 ```
 
 ### 使用
