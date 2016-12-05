@@ -2,47 +2,64 @@
 # -*- coding: UTF-8 -*-
 
 import codecs
-import myConfigParser
 import db
+import ConfigParser
 import re
 from jinja2 import Template
 
 class core:
     db=''
+    tpl_config=[]
+    cf=''
 
     @staticmethod
     def init(filename):
         try:
-            myConfigParser.myConfigParser.load(filename)
+            core.cf = ConfigParser.ConfigParser()
 
-            host=myConfigParser.myConfigParser.get("MYSQL","host")
-            user=myConfigParser.myConfigParser.get("MYSQL","user")
-            port=int(myConfigParser.myConfigParser.get("MYSQL","port"))
-            passwd=myConfigParser.myConfigParser.get("MYSQL","passwd")
-            dbname=myConfigParser.myConfigParser.get("MYSQL","db")
+            core.cf.read(filename)
+
+            for l in core.cf.sections():
+                m = re.search(r'TPL::(.*)',l,re.I|re.MULTILINE)
+                if m:
+                    if m.group(1):
+                        core.tpl_config.append(m.group(0))
+
+            host=core.cf.get("MYSQL","host")
+            user=core.cf.get("MYSQL","user")
+            port=int(core.cf.get("MYSQL","port"))
+            passwd=core.cf.get("MYSQL","passwd")
+            dbname=core.cf.get("MYSQL","db")
 
             core.db = db.MyDb(host,port,user,passwd,dbname)
         except Exception,e:
             print e
 
     @staticmethod
-    def runmodel(table_name):
-        model_tpl=myConfigParser.myConfigParser.get("TPL","model")
+    def run():
+        for c in  core.tpl_config:
+            tablename =  core.cf.get(c,"tablename")
+            tpl       =  core.cf.get(c,"tpl")
+            output_dir=  core.cf.get(c,"output_dir")
+            core.gorun(tablename,tpl,output_dir)
 
-        tpl_content = codecs.open(model_tpl).read()
-        sql='show create table %s' %(table_name)
+    @staticmethod
+    def gorun(tablename,tpl,output_dir):
+        tpl_content = codecs.open(tpl).read()
+
+        sql='show create table %s' %(tablename)
         struct=core.db.fetchone(sql)
 
         if(len(struct[1])==0):
-            raise Exception("can't fetch table:%s"%(table_name))
+            raise Exception("can't fetch table:%s"%(tablename))
 
         m = re.findall(r"PRIMARY KEY \(`(.*?)`\).*?", struct[1])
         if(len(m)==0):
-            raise Exception("can't get PRIMARY_KEY of table:%s"%(table_name))
+            raise Exception("can't get PRIMARY_KEY of table:%s"%(tablename))
 
         pk = m[0]
 
-        fields      =  core.utilFields(table_name)
+        fields      =  core.utilFields(tablename)
 
         #预先生成好需要替换的格式
         #fields_bind mysql bind 模式: field1=?,field2=?
@@ -57,17 +74,17 @@ class core:
             fields_cond.append('$%s'%(field))
             fields_cond_val.append('%s=$%s'%(field,field))
 
-        tpl_content = codecs.open(model_tpl).read()
+        tpl_content = codecs.open(tpl).read()
 
         template    = Template(tpl_content)
-        tpl_content=template.render(tablename=table_name,pk=pk,fields_cond=fields_cond,fields_bind=fields_bind,fields_cond_val=fields_cond_val)
+        tpl_content=template.render(tablename=tablename,pk=pk,fields_cond=fields_cond,fields_bind=fields_bind,fields_cond_val=fields_cond_val)
 
-        core.writeTplContent(tpl_content,table_name)
+        core.writeTplContent(tpl_content,tablename,output_dir)
+
 
     @staticmethod
-    def utilFields(table_name):
-        print "fetch %s Fidlds"%(table_name)
-        sql='SHOW FIELDS FROM %s' %(table_name)
+    def utilFields(tablename):
+        sql='SHOW FIELDS FROM %s' %(tablename)
         fields=core.db.fetchall(sql)
         fields_used = []
         for field in fields:
@@ -77,9 +94,12 @@ class core:
         return fields_used
 
     @staticmethod
-    def writeTplContent(tpl_content,table_name):
-        output_file = re.sub(r'model',table_name,myConfigParser.myConfigParser.get("TPL","output_model"))
+    def writeTplContent(tpl_content,tablename,output):
+        output_file = "%s/%s.php"%(output,tablename)
+
         output      = codecs.open(output_file,"w")
         output.write(tpl_content)
+
         print "file write into %s" %(output_file)
+
 

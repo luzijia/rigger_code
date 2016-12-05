@@ -24,7 +24,7 @@ def main():
     else:
         if os.path.exists(filename):
             core.init(filename)
-            core.runmodel("User")
+            core.run()
         else:
             print "%s not exists"%(filename)
 
