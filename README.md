@@ -39,10 +39,8 @@ RIGGER CODE 轻量级代码脚手架 程序员开发代码的加速器
 
     这里还可以生成更多的模式
 
-```
-
+    ```
 ### 安装
-
 ```
 $ git clone https://github.com/luzijia/rigger_code
 $ chmod u+x setup.sh
