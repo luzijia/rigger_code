@@ -2,7 +2,7 @@
 
 RIGGER CODE 轻量级代码脚手架 程序员开发代码的加速器
 
-#fix this is a bug and revert
+#this is a bug
 
 ## 优点
 无需了解Python代码即可使用
