@@ -4,6 +4,7 @@ RIGGER CODE 轻量级代码脚手架 程序员开发代码的加速器
 #fix this is a bug and revert
 
 ## 优点
+
 无需了解Python代码即可使用
 安装后自动生成可执行文件
 通过加载配置文件完成操作
