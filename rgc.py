@@ -1,5 +1,4 @@
 #!/usr/bin/env python -u
-
 # -*- coding: UTF-8 -*-
 """
 Usage: rgc [options]
